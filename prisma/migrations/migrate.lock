@@ -1,0 +1,5 @@
+# Prisma Migrate lockfile v1
+
+20201202195422-add-user-table
+20201202200522-add-car-table
+20201202204956-add-specification-rental-tables
