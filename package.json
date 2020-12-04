@@ -4,10 +4,21 @@
   "main": "index.js",
   "author": "Ricardo Filho",
   "license": "MIT",
+  "scripts": {
+    "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts"
+  },
   "devDependencies": {
     "@prisma/cli": "^2.12.1",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.9",
     "@types/node": "^14.14.10",
     "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
     "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.12.1",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1"
   }
 }
