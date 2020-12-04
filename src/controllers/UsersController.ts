@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
 
-const prisma = new PrismaClient();
+import prisma from '../database';
 
 export default class UserController {
   async create(request: Request, response: Response) {

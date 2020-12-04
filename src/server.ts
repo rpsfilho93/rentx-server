@@ -1,4 +1,5 @@
 import express from 'express';
+import prisma from './database';
 import routes from './routes';
 
 const app = express();
