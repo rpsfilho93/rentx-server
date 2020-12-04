@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import { sign } from "jsonwebtoken";
-import { compare } from "bcryptjs";
+import { Request, Response } from 'express';
+import { sign } from 'jsonwebtoken';
+import { compare } from 'bcryptjs';
 
-import prisma from "../database";
-import authConfig from "../config/auth";
+import prisma from '../database';
+import authConfig from '../config/auth';
 
 export default class SessionsController {
   async create(request: Request, response: Response): Promise<Response> {
@@ -18,7 +18,7 @@ export default class SessionsController {
     if (!user) {
       return response
         .status(400)
-        .json({ message: "Wrong email/password combination" });
+        .json({ message: 'Wrong email/password combination' });
     }
 
     const passwordsMatched = await compare(password, user.password);
@@ -26,7 +26,7 @@ export default class SessionsController {
     if (!passwordsMatched) {
       return response
         .status(400)
-        .json({ message: "Wrong email/password combination" });
+        .json({ message: 'Wrong email/password combination' });
     }
 
     const { secret, expiresIn } = authConfig.jwt;

@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { hash } from "bcryptjs";
+import { Request, Response } from 'express';
+import { hash } from 'bcryptjs';
 
-import prisma from "../database";
+import prisma from '../database';
 
 export default class UserController {
   async create(request: Request, response: Response): Promise<Response> {
@@ -14,7 +14,7 @@ export default class UserController {
     });
 
     if (checkEmail) {
-      return response.status(400).json({ message: "Email already in use." });
+      return response.status(400).json({ message: 'Email already in use.' });
     }
 
     const hashedPassword = await hash(password, 8);

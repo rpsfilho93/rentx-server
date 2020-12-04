@@ -23,7 +23,9 @@
         "prettier"
     ],
     "rules": {
-      "prettier/prettier": "error",
+      "camelcase": "off",
+      "quotes": [2, "single", { "avoidEscape": true }],
+      "prettier/prettier": ["error", { "singleQuote": true }],
       "class-methods-use-this": "off",
       "import/extensions": [
         "error",
