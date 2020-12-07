@@ -97,6 +97,7 @@ export default class CarsController {
       where: {
         name: {
           contains: String(name),
+          mode: 'insensitive',
         },
       },
     });
