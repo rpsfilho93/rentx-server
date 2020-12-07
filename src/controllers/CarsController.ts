@@ -90,6 +90,20 @@ export default class CarsController {
     return response.status(200).json(updatedCar);
   }
 
+  async index(request: Request, response: Response): Promise<Response> {
+    const { name } = request.query;
+
+    const cars = await prisma.car.findMany({
+      where: {
+        name: {
+          contains: String(name),
+        },
+      },
+    });
+
+    return response.status(200).json(cars);
+  }
+
   async delete(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
     const { car_id } = request.query;

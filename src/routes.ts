@@ -23,6 +23,7 @@ routes.use(ensureAuthentication);
 
 routes.post('/cars', upload.single('image'), carsController.create);
 routes.patch('/cars', carsController.update);
+routes.get('/cars', carsController.index);
 routes.delete('/cars', carsController.delete);
 
 export default routes;
