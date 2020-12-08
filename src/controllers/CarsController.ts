@@ -92,7 +92,15 @@ export default class CarsController {
   }
 
   async index(request: Request, response: Response): Promise<Response> {
-    const { name, start_date, end_date } = request.query;
+    const {
+      name,
+      start_date,
+      end_date,
+      start_price,
+      end_price,
+      fuel,
+      transmission,
+    } = request.query;
 
     if (name) {
       const cars = await prisma.car.findMany({
@@ -121,6 +129,68 @@ export default class CarsController {
               end_date: {
                 lt: startDate,
               },
+            },
+          },
+        },
+      });
+
+      return response.status(200).json(cars);
+    }
+
+    if (start_price && end_price && fuel && transmission) {
+      const startPrice = Number(start_price);
+      const endPrice = Number(end_price);
+
+      if (startPrice > endPrice) {
+        return response
+          .status(400)
+          .json({ message: 'Start price must be smaller than end price.' });
+      }
+
+      const cars = await prisma.car.findMany({
+        where: {
+          AND: [
+            {
+              daily_value: {
+                gte: startPrice,
+                lte: endPrice,
+              },
+            },
+            {
+              specs: {
+                every: {
+                  OR: [
+                    {
+                      AND: [
+                        {
+                          name: 'Fuel',
+                        },
+                        {
+                          description: String(fuel),
+                        },
+                      ],
+                    },
+                    {
+                      AND: [
+                        {
+                          name: 'Transmission',
+                        },
+                        {
+                          description: String(transmission),
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          specs: {
+            select: {
+              name: true,
+              description: true,
             },
           },
         },
