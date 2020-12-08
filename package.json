@@ -28,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "bcryptjs": "^2.4.3",
+    "celebrate": "^13.0.4",
     "date-fns": "^2.16.1",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",

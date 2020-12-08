@@ -1,6 +1,8 @@
 import express from 'express';
 import multer from 'multer';
+import { celebrate, Joi, Segments } from 'celebrate';
 
+import { join } from 'path';
 import UsersController from './controllers/UsersController';
 import SessionsController from './controllers/SessionsController';
 import CarsController from './controllers/CarsController';
@@ -20,19 +22,115 @@ const rentalsController = new RentalsController();
 const routes = express.Router();
 const upload = multer(uploadConfig);
 
-routes.post('/users', usersController.create);
+routes.post(
+  '/users',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+  }),
+  usersController.create
+);
 
-routes.post('/sessions', sessionsController.create);
+routes.post(
+  '/sessions',
+  celebrate({
+    [Segments.BODY]: {
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+  }),
+  sessionsController.create
+);
 
 routes.use(ensureAuthentication);
 
-routes.post('/cars', upload.single('image'), carsController.create);
-routes.patch('/cars', carsController.update);
-routes.get('/cars', carsController.index);
-routes.delete('/cars', carsController.delete);
+routes.post(
+  '/cars',
+  upload.single('image'),
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      brand: Joi.string().required(),
+      daily_value: Joi.number().required(),
+    },
+  }),
+  carsController.create
+);
 
-routes.post('/specs', specsController.create);
+routes.patch(
+  '/cars',
+  celebrate({
+    [Segments.BODY]: {
+      car: Joi.string().required(),
+      brand: Joi.string().required(),
+      daily_value: Joi.number().required(),
+    },
+  }),
+  carsController.update
+);
 
-routes.post('/rentals', rentalsController.create);
+routes.get(
+  '/cars',
+  celebrate({
+    [Segments.QUERY]: Joi.object({
+      name: Joi.string(),
+      start_date: Joi.string().isoDate(),
+      end_date: Joi.string().isoDate(),
+      start_price: Joi.number(),
+      end_price: Joi.number(),
+      fuel: Joi.string(),
+      transmission: Joi.string(),
+    })
+      .and('start_date', 'end_date')
+      .and('start_price', 'end_price', 'fuel', 'transmission')
+      .without('name', [
+        'start_date',
+        'end_date',
+        'start_price',
+        'end_price',
+        'fuel',
+        'transmission',
+      ]),
+  }),
+  carsController.index
+);
+
+routes.delete(
+  '/cars',
+  celebrate({
+    [Segments.QUERY]: {
+      car_id: Joi.string().uuid().required(),
+    },
+  }),
+  carsController.delete
+);
+
+routes.post(
+  '/specs',
+  celebrate({
+    [Segments.BODY]: {
+      car_id: Joi.string().uuid().required(),
+      name: Joi.string().required(),
+      description: Joi.string().required(),
+      icon: Joi.string().required(),
+    },
+  }),
+  specsController.create
+);
+
+routes.post(
+  '/rentals',
+  celebrate({
+    [Segments.BODY]: {
+      car_id: Joi.string().uuid().required(),
+      start_date: Joi.date().required(),
+      end_date: Joi.date().required(),
+    },
+  }),
+  rentalsController.create
+);
 
 export default routes;

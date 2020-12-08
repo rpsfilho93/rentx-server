@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
-import { parseISO } from 'date-fns';
+import { parseISO, parse } from 'date-fns';
 import uploadConfig from '../config/upload';
 import prisma from '../database';
 import AppError from '../errors/AppError';
