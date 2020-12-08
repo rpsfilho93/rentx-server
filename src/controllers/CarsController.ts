@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
+import { parseISO } from 'date-fns';
 import uploadConfig from '../config/upload';
 import prisma from '../database';
 import AppError from '../errors/AppError';
@@ -91,16 +92,44 @@ export default class CarsController {
   }
 
   async index(request: Request, response: Response): Promise<Response> {
-    const { name } = request.query;
+    const { name, start_date, end_date } = request.query;
 
-    const cars = await prisma.car.findMany({
-      where: {
-        name: {
-          contains: String(name),
-          mode: 'insensitive',
+    if (name) {
+      const cars = await prisma.car.findMany({
+        where: {
+          name: {
+            contains: String(name),
+            mode: 'insensitive',
+          },
         },
-      },
-    });
+      });
+
+      return response.status(200).json(cars);
+    }
+
+    if (start_date && end_date) {
+      const startDate = parseISO(String(start_date));
+      const endDate = parseISO(String(end_date));
+
+      const cars = await prisma.car.findMany({
+        where: {
+          Rental: {
+            every: {
+              start_date: {
+                gt: endDate,
+              },
+              end_date: {
+                lt: startDate,
+              },
+            },
+          },
+        },
+      });
+
+      return response.status(200).json(cars);
+    }
+
+    const cars = await prisma.car.findMany();
 
     return response.status(200).json(cars);
   }
