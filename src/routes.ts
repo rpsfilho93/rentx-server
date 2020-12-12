@@ -6,6 +6,7 @@ import { join } from 'path';
 import UsersController from './controllers/UsersController';
 import SessionsController from './controllers/SessionsController';
 import CarsController from './controllers/CarsController';
+import CarImagesController from './controllers/CarImagesController';
 import SpecsController from './controllers/SpecsController';
 import RentalsController from './controllers/RentalsController';
 
@@ -18,6 +19,7 @@ const sessionsController = new SessionsController();
 const carsController = new CarsController();
 const specsController = new SpecsController();
 const rentalsController = new RentalsController();
+const carImagesController = new CarImagesController();
 
 const routes = express.Router();
 const upload = multer(uploadConfig);
@@ -49,7 +51,6 @@ routes.use(ensureAuthentication);
 
 routes.post(
   '/cars',
-  upload.single('image'),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
@@ -58,6 +59,12 @@ routes.post(
     },
   }),
   carsController.create
+);
+
+routes.post(
+  '/cars/:id/images',
+  upload.single('image'),
+  carImagesController.store
 );
 
 routes.patch(
@@ -99,10 +106,10 @@ routes.get(
 );
 
 routes.delete(
-  '/cars',
+  '/cars/:id',
   celebrate({
-    [Segments.QUERY]: {
-      car_id: Joi.string().uuid().required(),
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
     },
   }),
   carsController.delete

@@ -1,16 +1,12 @@
 import { Request, Response } from 'express';
-import path from 'path';
-import fs from 'fs';
-
 import { parseISO, parse } from 'date-fns';
-import uploadConfig from '../config/upload';
+
 import prisma from '../database';
 import AppError from '../errors/AppError';
 
 export default class CarsController {
   async create(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { filename } = request.file;
     const { name, brand, daily_value } = request.body;
 
     const user = await prisma.user.findFirst({
@@ -31,17 +27,11 @@ export default class CarsController {
         .json({ message: 'You do not have admin authority' });
     }
 
-    await fs.promises.rename(
-      path.resolve(uploadConfig.tmpFolder, filename),
-      path.resolve(uploadConfig.uploadsFolder, filename)
-    );
-
     const car = await prisma.car.create({
       data: {
         name,
         brand,
         daily_value: Number(daily_value),
-        image: filename,
       },
     });
 
@@ -206,7 +196,7 @@ export default class CarsController {
 
   async delete(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { car_id } = request.query;
+    const car_id = request.params.id;
 
     const user = await prisma.user.findFirst({
       where: {

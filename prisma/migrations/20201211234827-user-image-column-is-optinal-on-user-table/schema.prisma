@@ -13,8 +13,8 @@ generator client {
 model User {
   id            String         @id @default(uuid())
   name          String
-  image         String?
   email         String         @unique
+  image         String?
   password      String
   admin         Boolean        @default(false)
   created_at    DateTime       @default(now())
@@ -26,7 +26,6 @@ model Car {
   name          String
   brand         String
   daily_value   Float
-  image         String
   specs         Specification[]
   created_at    DateTime       @default(now())
   updated_at    DateTime       @updatedAt
@@ -53,4 +52,11 @@ model Rental {
   end_date      DateTime
   created_at    DateTime       @default(now())
   updated_at    DateTime       @updatedAt
+}
+
+model CarImage {
+  id            String         @id @default(uuid())
+  name          String
+  car           Car            @relation(fields: [car_id], references: [id])
+  car_id        String
 }

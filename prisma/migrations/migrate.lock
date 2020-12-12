@@ -1,6 +1,3 @@
 # Prisma Migrate lockfile v1
 
-20201202195422-add-user-table
-20201202200522-add-car-table
-20201202204956-add-specification-rental-tables
-20201204183640-add-image-column-to-car-table
+20201211234827-user-image-column-is-optinal-on-user-table
