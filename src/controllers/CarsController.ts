@@ -122,9 +122,37 @@ export default class CarsController {
             },
           },
         },
+        include: {
+          specs: {
+            select: {
+              name: true,
+              description: true,
+              icon: true,
+            },
+          },
+          CarImage: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
 
-      return response.status(200).json(cars);
+      const carsWithURL = cars.map((car) => {
+        const car_images = car.CarImage.map((image) => ({
+          ...image,
+          image_url: image.name
+            ? `http://localhost:3333/files/${image.name}`
+            : null,
+        }));
+
+        return {
+          ...car,
+          CarImage: car_images,
+        };
+      });
+
+      return response.status(200).json(carsWithURL);
     }
 
     if (start_price && end_price && fuel && transmission) {

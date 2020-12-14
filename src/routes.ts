@@ -116,10 +116,12 @@ routes.delete(
 );
 
 routes.post(
-  '/specs',
+  '/cars/:id/specs',
   celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
     [Segments.BODY]: {
-      car_id: Joi.string().uuid().required(),
       name: Joi.string().required(),
       description: Joi.string().required(),
       icon: Joi.string().required(),

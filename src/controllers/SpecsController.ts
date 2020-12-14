@@ -4,7 +4,8 @@ import prisma from '../database';
 export default class SpecController {
   async create(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { car_id, name, description, icon } = request.body;
+    const car_id = request.params.id;
+    const { name, description, icon } = request.body;
 
     const user = await prisma.user.findFirst({
       where: {
