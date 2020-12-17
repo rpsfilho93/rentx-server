@@ -47,6 +47,32 @@ routes.post(
   sessionsController.create
 );
 
+routes.get(
+  '/cars',
+  celebrate({
+    [Segments.QUERY]: Joi.object({
+      name: Joi.string(),
+      start_date: Joi.string().isoDate(),
+      end_date: Joi.string().isoDate(),
+      start_price: Joi.number(),
+      end_price: Joi.number(),
+      fuel: Joi.string(),
+      transmission: Joi.string(),
+    })
+      .and('start_date', 'end_date')
+      .and('start_price', 'end_price', 'fuel', 'transmission')
+      .without('name', [
+        'start_date',
+        'end_date',
+        'start_price',
+        'end_price',
+        'fuel',
+        'transmission',
+      ]),
+  }),
+  carsController.index
+);
+
 routes.use(ensureAuthentication);
 
 routes.post(
@@ -77,32 +103,6 @@ routes.patch(
     },
   }),
   carsController.update
-);
-
-routes.get(
-  '/cars',
-  celebrate({
-    [Segments.QUERY]: Joi.object({
-      name: Joi.string(),
-      start_date: Joi.string().isoDate(),
-      end_date: Joi.string().isoDate(),
-      start_price: Joi.number(),
-      end_price: Joi.number(),
-      fuel: Joi.string(),
-      transmission: Joi.string(),
-    })
-      .and('start_date', 'end_date')
-      .and('start_price', 'end_price', 'fuel', 'transmission')
-      .without('name', [
-        'start_date',
-        'end_date',
-        'start_price',
-        'end_price',
-        'fuel',
-        'transmission',
-      ]),
-  }),
-  carsController.index
 );
 
 routes.delete(

@@ -100,9 +100,37 @@ export default class CarsController {
             mode: 'insensitive',
           },
         },
+        include: {
+          specs: {
+            select: {
+              name: true,
+              description: true,
+              icon: true,
+            },
+          },
+          CarImage: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
 
-      return response.status(200).json(cars);
+      const carsWithURL = cars.map((car) => {
+        const car_images = car.CarImage.map((image) => ({
+          ...image,
+          image_url: image.name
+            ? `http://10.0.0.11:3333/files/${image.name}`
+            : null,
+        }));
+
+        return {
+          ...car,
+          CarImage: car_images,
+        };
+      });
+
+      return response.status(200).json(carsWithURL);
     }
 
     if (start_date && end_date) {
@@ -142,7 +170,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://localhost:3333/files/${image.name}`
+            ? `http://10.0.0.11:3333/files/${image.name}`
             : null,
         }));
 
@@ -209,17 +237,66 @@ export default class CarsController {
             select: {
               name: true,
               description: true,
+              icon: true,
+            },
+          },
+          CarImage: {
+            select: {
+              name: true,
             },
           },
         },
       });
 
-      return response.status(200).json(cars);
+      const carsWithURL = cars.map((car) => {
+        const car_images = car.CarImage.map((image) => ({
+          ...image,
+          image_url: image.name
+            ? `http://10.0.0.11:3333/files/${image.name}`
+            : null,
+        }));
+
+        return {
+          ...car,
+          CarImage: car_images,
+        };
+      });
+
+      return response.status(200).json(carsWithURL);
     }
 
-    const cars = await prisma.car.findMany();
+    const cars = await prisma.car.findMany({
+      include: {
+        specs: {
+          select: {
+            name: true,
+            description: true,
+            icon: true,
+          },
+        },
+        CarImage: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
 
-    return response.status(200).json(cars);
+    const carsWithURL = cars.map((car) => {
+      const car_images = car.CarImage.map((image) => ({
+        ...image,
+        image_url: image.name
+          ? `http://10.0.0.11:3333/files/${image.name}`
+          : null,
+      }));
+
+      return {
+        ...car,
+        CarImage: car_images,
+      };
+    });
+
+    return response.status(200).json(carsWithURL);
   }
 
   async delete(request: Request, response: Response): Promise<Response> {
