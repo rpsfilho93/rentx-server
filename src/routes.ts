@@ -2,13 +2,14 @@ import express from 'express';
 import multer from 'multer';
 import { celebrate, Joi, Segments } from 'celebrate';
 
-import { join } from 'path';
 import UsersController from './controllers/UsersController';
 import SessionsController from './controllers/SessionsController';
 import CarsController from './controllers/CarsController';
 import CarImagesController from './controllers/CarImagesController';
 import SpecsController from './controllers/SpecsController';
 import RentalsController from './controllers/RentalsController';
+import AvatarUserController from './controllers/AvatarUserController';
+import ProfileController from './controllers/ProfileController';
 
 import ensureAuthentication from './middlewares/ensureAuthentication';
 
@@ -20,6 +21,8 @@ const carsController = new CarsController();
 const specsController = new SpecsController();
 const rentalsController = new RentalsController();
 const carImagesController = new CarImagesController();
+const avatarUserController = new AvatarUserController();
+const profileController = new ProfileController();
 
 const routes = express.Router();
 const upload = multer(uploadConfig);
@@ -47,6 +50,12 @@ routes.post(
   sessionsController.create
 );
 
+routes.use(ensureAuthentication);
+
+routes.patch('/avatar', upload.single('avatar'), avatarUserController.update);
+
+routes.put('/profile', profileController.update);
+
 routes.get(
   '/cars',
   celebrate({
@@ -72,8 +81,6 @@ routes.get(
   }),
   carsController.index
 );
-
-routes.use(ensureAuthentication);
 
 routes.post(
   '/cars',
