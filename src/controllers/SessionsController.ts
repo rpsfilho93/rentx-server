@@ -40,7 +40,7 @@ export default class SessionsController {
         id,
         name,
         email,
-        image_url: image ? `${process.env.APP_API_URL}/files/${image}` : null,
+        image_url: image ? `http://192.168.25.234:3333/files/${image}` : null,
       },
       token,
     });

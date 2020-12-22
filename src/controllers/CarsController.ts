@@ -120,7 +120,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://10.0.0.11:3333/files/${image.name}`
+            ? `http://192.168.25.234:3333/files/${image.name}`
             : null,
         }));
 
@@ -140,12 +140,12 @@ export default class CarsController {
       const cars = await prisma.car.findMany({
         where: {
           Rental: {
-            every: {
+            none: {
               start_date: {
-                gt: endDate,
+                lte: endDate,
               },
               end_date: {
-                lt: startDate,
+                gte: startDate,
               },
             },
           },
@@ -170,7 +170,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://10.0.0.11:3333/files/${image.name}`
+            ? `http://192.168.25.234:3333/files/${image.name}`
             : null,
         }));
 
@@ -252,7 +252,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://10.0.0.11:3333/files/${image.name}`
+            ? `http://192.168.25.234:3333/files/${image.name}`
             : null,
         }));
 
@@ -286,7 +286,7 @@ export default class CarsController {
       const car_images = car.CarImage.map((image) => ({
         ...image,
         image_url: image.name
-          ? `http://10.0.0.11:3333/files/${image.name}`
+          ? `http://192.168.25.234:3333/files/${image.name}`
           : null,
       }));
 

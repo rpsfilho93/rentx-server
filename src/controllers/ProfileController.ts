@@ -58,7 +58,7 @@ export default class ProfileController {
     return response.json({
       ...updated,
       avatar_url: user.image
-        ? `http://10.0.0.11:3333/files/${updated.image}`
+        ? `http://192.168.25.234:3333/files/${updated.image}`
         : null,
     });
   }

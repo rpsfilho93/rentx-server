@@ -17,10 +17,7 @@ export default class RentalController {
       return response.status(400).json({ message: 'Car not found.' });
     }
 
-    const startDate = parseISO(start_date);
-    const endDate = parseISO(end_date);
-
-    const wrongOrder = isAfter(startDate, endDate);
+    const wrongOrder = isAfter(start_date, end_date);
 
     if (wrongOrder) {
       return response
@@ -38,12 +35,14 @@ export default class RentalController {
 
     const alreadyRented = await prisma.rental.findMany({
       where: {
-        car_id: String(car_id),
+        car: {
+          id: String(car_id),
+        },
         start_date: {
-          lte: endDate,
+          lte: end_date,
         },
         end_date: {
-          gte: startDate,
+          gte: start_date,
         },
       },
     });
@@ -66,11 +65,62 @@ export default class RentalController {
             id: user_id,
           },
         },
-        start_date: startDate,
-        end_date: endDate,
+        start_date,
+        end_date,
       },
     });
 
     return response.status(201).send();
+  }
+
+  async index(request: Request, response: Response): Promise<Response> {
+    const user_id = request.user.id;
+
+    const rentals = await prisma.rental.findMany({
+      where: {
+        client_id: user_id,
+      },
+      select: {
+        car: {
+          select: {
+            id: true,
+            brand: true,
+            CarImage: true,
+            name: true,
+            daily_value: true,
+            specs: {
+              where: {
+                name: 'Fuel',
+              },
+            },
+          },
+        },
+        start_date: true,
+        end_date: true,
+        id: true,
+      },
+      orderBy: {
+        start_date: 'asc',
+      },
+    });
+
+    const rentalsWithURL = rentals.map((rental) => {
+      const car_images = rental.car.CarImage.map((image) => ({
+        ...image,
+        image_url: image.name
+          ? `http://192.168.25.234:3333/files/${image.name}`
+          : null,
+      }));
+
+      return {
+        ...rental,
+        car: {
+          ...rental.car,
+          CarImage: car_images,
+        },
+      };
+    });
+
+    return response.status(200).json(rentalsWithURL);
   }
 }

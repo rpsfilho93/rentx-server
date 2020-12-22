@@ -149,4 +149,6 @@ routes.post(
   rentalsController.create
 );
 
+routes.get('/rentals', rentalsController.index);
+
 export default routes;
