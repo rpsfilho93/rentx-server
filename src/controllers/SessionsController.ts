@@ -61,8 +61,6 @@ export default class SessionsController {
       });
     }
 
-    console.log(carsOrderByOccurrences);
-
     const favoriteCar = await prisma.car.findUnique({
       where: {
         id: carsOrderByOccurrences[0].car_id,
