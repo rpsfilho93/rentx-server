@@ -1,11 +1,11 @@
 {
-  "name": "hello-prisma",
+  "name": "rentx-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "author": "Ricardo Filho",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/src/server.ts",
+    "start": "node dist/src/server.js",
     "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts",
     "build": "tsc"
   },
