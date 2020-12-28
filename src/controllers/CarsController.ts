@@ -120,7 +120,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://192.168.25.234:3333/files/${image.name}`
+            ? `${process.env.APP_API_URL}/files/${image.name}`
             : null,
         }));
 
@@ -170,7 +170,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://192.168.25.234:3333/files/${image.name}`
+            ? `${process.env.APP_API_URL}/files/${image.name}`
             : null,
         }));
 
@@ -252,7 +252,7 @@ export default class CarsController {
         const car_images = car.CarImage.map((image) => ({
           ...image,
           image_url: image.name
-            ? `http://192.168.25.234:3333/files/${image.name}`
+            ? `${process.env.APP_API_URL}/files/${image.name}`
             : null,
         }));
 
@@ -286,7 +286,7 @@ export default class CarsController {
       const car_images = car.CarImage.map((image) => ({
         ...image,
         image_url: image.name
-          ? `http://192.168.25.234:3333/files/${image.name}`
+          ? `${process.env.APP_API_URL}/files/${image.name}`
           : null,
       }));
 

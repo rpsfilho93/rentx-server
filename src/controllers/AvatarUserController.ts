@@ -51,7 +51,7 @@ export default class AvatarUserController {
     return response.json({
       ...updated,
       image_url: updated.image
-        ? `http://192.168.25.234:3333/files/${updated.image}`
+        ? `${process.env.APP_API_URL}/files/${updated.image}`
         : null,
     });
   }

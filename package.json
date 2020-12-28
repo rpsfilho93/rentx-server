@@ -5,7 +5,9 @@
   "author": "Ricardo Filho",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts"
+    "start": "node dist/src/server.ts",
+    "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@prisma/cli": "^2.12.1",
@@ -30,6 +32,7 @@
     "bcryptjs": "^2.4.3",
     "celebrate": "^13.0.4",
     "date-fns": "^2.16.1",
+    "dotenv": "^8.2.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "express": "^4.17.1",
