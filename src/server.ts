@@ -13,4 +13,4 @@ app.use(routes);
 
 app.use(errors());
 
-app.listen(process.env.PORT || 3333);
+app.listen(Number(process.env.PORT) || 3333);
