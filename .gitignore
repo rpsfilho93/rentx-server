@@ -3,4 +3,4 @@ yarn.lock
 .env
 tmp/*
 !tmp/.gitkeep
-*/.env
+prisma/.env
