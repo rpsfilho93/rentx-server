@@ -1,6 +1,8 @@
 /node_modules
 yarn.lock
 .env
+.env.example
 tmp/*
 !tmp/.gitkeep
-prisma/.env
+
+*/.env
