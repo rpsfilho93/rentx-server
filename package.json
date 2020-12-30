@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "tsnd src/seed.ts"
   },
   "devDependencies": {
     "@prisma/cli": "^2.13.1",
