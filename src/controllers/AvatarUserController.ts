@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
+import aws from 'aws-sdk';
+import mime from 'mime';
 
 import prisma from '../database';
 import uploadConfig from '../config/upload';
@@ -18,6 +20,57 @@ export default class AvatarUserController {
 
     if (!user) {
       return response.status(400).json({ message: 'User not found.' });
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+      const client = new aws.S3({
+        region: 'us-east-2',
+      });
+
+      if (user.image) {
+        await client
+          .deleteObject({
+            Bucket: 'app-proffy',
+            Key: user.image,
+          })
+          .promise();
+      }
+
+      const originalPath = path.resolve(uploadConfig.tmpFolder, filename);
+
+      const ContentType = mime.getType(originalPath);
+
+      if (!ContentType) {
+        throw new Error('File not found.');
+      }
+
+      const fileContent = await fs.promises.readFile(originalPath);
+
+      await client
+        .putObject({
+          Bucket: 'app-proffy',
+          Key: filename,
+          ACL: 'public-read',
+          Body: fileContent,
+          ContentType,
+        })
+        .promise();
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: user_id,
+        },
+        data: {
+          image: filename,
+        },
+      });
+
+      return response.json({
+        ...updatedUser,
+        avatar_url: updatedUser.image
+          ? `${process.env.AWS_URL}/${updatedUser.image}`
+          : null,
+      });
     }
 
     if (user.image) {
