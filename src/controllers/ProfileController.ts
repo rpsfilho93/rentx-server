@@ -58,7 +58,7 @@ export default class ProfileController {
     return response.json({
       ...updated,
       image_url: user.image
-        ? `${process.env.APP_API_URL}/files/${updated.image}`
+        ? `${process.env.AWS_URL}/${updated.image}`
         : null,
     });
   }

@@ -108,7 +108,7 @@ export default class RentalController {
       const car_images = rental.car.CarImage.map((image) => ({
         ...image,
         image_url: image.name
-          ? `${process.env.APP_API_URL}/files/${image.name}`
+          ? `${process.env.AWS_URL}/${image.name}`
           : null,
       }));
 

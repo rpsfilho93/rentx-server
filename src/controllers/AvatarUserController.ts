@@ -22,7 +22,6 @@ export default class AvatarUserController {
       return response.status(400).json({ message: 'User not found.' });
     }
 
-    // if (process.env.NODE_ENV === 'production') {
     const client = new aws.S3({
       region: 'us-east-2',
     });
@@ -71,41 +70,5 @@ export default class AvatarUserController {
         ? `${process.env.AWS_URL}/${updatedUser.image}`
         : null,
     });
-    // }
-
-    /** if (user.image) {
-      const filePath = path.resolve(uploadConfig.uploadsFolder, user.image);
-
-      try {
-        await fs.promises.stat(filePath);
-      } catch {
-        return response
-          .status(500)
-          .json({ message: 'Could not find this file.' });
-      }
-
-      await fs.promises.unlink(filePath);
-    }
-
-    await fs.promises.rename(
-      path.resolve(uploadConfig.tmpFolder, filename),
-      path.resolve(uploadConfig.uploadsFolder, filename)
-    );
-
-    const updated = await prisma.user.update({
-      where: {
-        id: user_id,
-      },
-      data: {
-        image: filename,
-      },
-    });
-
-    return response.json({
-      ...updated,
-      image_url: updated.image
-        ? `${process.env.APP_API_URL}/files/${updated.image}`
-        : null,
-    });* */
   }
 }

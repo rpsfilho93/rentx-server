@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
+import aws from 'aws-sdk';
+import mime from 'mime';
 
 import uploadConfig from '../config/upload';
 import prisma from '../database';
@@ -40,10 +42,29 @@ export default class CarImagesController {
         .json({ message: 'You do not have admin authority' });
     }
 
-    await fs.promises.rename(
-      path.resolve(uploadConfig.tmpFolder, filename),
-      path.resolve(uploadConfig.uploadsFolder, filename)
-    );
+    const client = new aws.S3({
+      region: 'us-east-2',
+    });
+
+    const originalPath = path.resolve(uploadConfig.tmpFolder, filename);
+
+    const ContentType = mime.getType(originalPath);
+
+    if (!ContentType) {
+      throw new Error('File not found.');
+    }
+
+    const fileContent = await fs.promises.readFile(originalPath);
+
+    await client
+      .putObject({
+        Bucket: 'rentx',
+        Key: filename,
+        ACL: 'public-read',
+        Body: fileContent,
+        ContentType,
+      })
+      .promise();
 
     await prisma.carImage.create({
       data: {

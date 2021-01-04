@@ -55,7 +55,7 @@ export default class SessionsController {
           id,
           name,
           email,
-          image_url: image ? `${process.env.APP_API_URL}/files/${image}` : null,
+          image_url: image ? `${process.env.AWS_URL}/${image}` : null,
         },
         token,
       });
@@ -83,7 +83,7 @@ export default class SessionsController {
         id,
         name,
         email,
-        image_url: image ? `${process.env.APP_API_URL}/files/${image}` : null,
+        image_url: image ? `${process.env.AWS_URL}/${image}` : null,
         rentals: numberOfRentals,
         favoriteCar: favoriteCar
           ? {
@@ -91,7 +91,7 @@ export default class SessionsController {
             brand: favoriteCar.brand,
             daily_value: favoriteCar.daily_value,
             fuel: favoriteCar.specs[0].icon,
-            image_url: `${process.env.APP_API_URL}/files/${favoriteCar.CarImage[0].name}`,
+            image_url: `${process.env.AWS_URL}/${favoriteCar.CarImage[0].name}`,
             occurrences: carsOrderByOccurrences[0].count,
           }
           : null,
