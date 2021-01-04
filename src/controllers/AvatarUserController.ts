@@ -64,9 +64,12 @@ export default class AvatarUserController {
       },
     });
 
+    const { name, email } = updatedUser;
+
     return response.json({
-      ...updatedUser,
-      avatar_url: updatedUser.image
+      name,
+      email,
+      image_url: updatedUser.image
         ? `${process.env.AWS_URL}/${updatedUser.image}`
         : null,
     });

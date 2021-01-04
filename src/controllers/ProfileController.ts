@@ -56,10 +56,9 @@ export default class ProfileController {
     });
 
     return response.json({
-      ...updated,
-      image_url: user.image
-        ? `${process.env.AWS_URL}/${updated.image}`
-        : null,
+      name,
+      email,
+      image_url: user.image ? `${process.env.AWS_URL}/${updated.image}` : null,
     });
   }
 }
