@@ -120,23 +120,21 @@ export default class ProfileController {
     });
 
     return response.json({
-      user: {
-        id,
-        name,
-        email,
-        image_url: image ? `${process.env.AWS_URL}/${image}` : null,
-        rentals: numberOfRentals,
-        favoriteCar: favoriteCar
-          ? {
-            name: favoriteCar.name,
-            brand: favoriteCar.brand,
-            daily_value: favoriteCar.daily_value,
-            fuel: favoriteCar.specs[0].icon,
-            image_url: `${process.env.AWS_URL}/${favoriteCar.CarImage[0].name}`,
-            occurrences: carsOrderByOccurrences[0].count,
-          }
-          : null,
-      },
+      id,
+      name,
+      email,
+      image_url: image ? `${process.env.AWS_URL}/${image}` : null,
+      rentals: numberOfRentals,
+      favoriteCar: favoriteCar
+        ? {
+          name: favoriteCar.name,
+          brand: favoriteCar.brand,
+          daily_value: favoriteCar.daily_value,
+          fuel: favoriteCar.specs[0].icon,
+          image_url: `${process.env.AWS_URL}/${favoriteCar.CarImage[0].name}`,
+          occurrences: carsOrderByOccurrences[0].count,
+        }
+        : null,
     });
   }
 }
