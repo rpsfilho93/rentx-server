@@ -61,4 +61,82 @@ export default class ProfileController {
       image_url: user.image ? `${process.env.AWS_URL}/${updated.image}` : null,
     });
   }
+
+  async show(request: Request, response: Response): Promise<Response> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: request.user.id,
+      },
+    });
+
+    if (!user) {
+      return response
+        .status(400)
+        .json({ message: 'Wrong email/password combination' });
+    }
+
+    const { id, name, email, image } = user;
+
+    const numberOfRentals = await prisma.rental.count({
+      where: {
+        client_id: id,
+      },
+    });
+
+    const carsOrderByOccurrences = await prisma.$queryRaw`
+      SELECT "car_id",
+      COUNT(*) AS "count"
+      FROM "Rental"
+      WHERE "client_id" = ${id}
+      GROUP BY "car_id"
+      ORDER BY "count" DESC`;
+
+    if (carsOrderByOccurrences.length === 0) {
+      return response.json({
+        user: {
+          id,
+          name,
+          email,
+          image_url: image ? `${process.env.AWS_URL}/${image}` : null,
+        },
+      });
+    }
+
+    const favoriteCar = await prisma.car.findUnique({
+      where: {
+        id: carsOrderByOccurrences[0].car_id,
+      },
+      include: {
+        CarImage: true,
+        specs: {
+          where: {
+            name: 'Fuel',
+          },
+          select: {
+            icon: true,
+          },
+        },
+      },
+    });
+
+    return response.json({
+      user: {
+        id,
+        name,
+        email,
+        image_url: image ? `${process.env.AWS_URL}/${image}` : null,
+        rentals: numberOfRentals,
+        favoriteCar: favoriteCar
+          ? {
+            name: favoriteCar.name,
+            brand: favoriteCar.brand,
+            daily_value: favoriteCar.daily_value,
+            fuel: favoriteCar.specs[0].icon,
+            image_url: `${process.env.AWS_URL}/${favoriteCar.CarImage[0].name}`,
+            occurrences: carsOrderByOccurrences[0].count,
+          }
+          : null,
+      },
+    });
+  }
 }

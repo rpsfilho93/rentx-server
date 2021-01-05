@@ -55,6 +55,7 @@ routes.use(ensureAuthentication);
 routes.patch('/avatar', upload.single('avatar'), avatarUserController.update);
 
 routes.put('/profile', profileController.update);
+routes.get('/profile', profileController.show);
 
 routes.get(
   '/cars',

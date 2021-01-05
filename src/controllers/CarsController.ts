@@ -119,7 +119,9 @@ export default class CarsController {
       const carsWithURL = cars.map((car) => {
         const car_images = car.CarImage.map((image) => ({
           ...image,
-          image_url: image.name ? `${process.env.AWS_URL}/${image.name}` : null,
+          image_url: image.name
+            ? `${process.env.APP_API_URL}/files/${image.name}`
+            : null,
         }));
 
         return {
@@ -167,7 +169,9 @@ export default class CarsController {
       const carsWithURL = cars.map((car) => {
         const car_images = car.CarImage.map((image) => ({
           ...image,
-          image_url: image.name ? `${process.env.AWS_URL}/${image.name}` : null,
+          image_url: image.name
+            ? `${process.env.APP_API_URL}/files/${image.name}`
+            : null,
         }));
 
         return {
@@ -247,7 +251,9 @@ export default class CarsController {
       const carsWithURL = cars.map((car) => {
         const car_images = car.CarImage.map((image) => ({
           ...image,
-          image_url: image.name ? `${process.env.AWS_URL}/${image.name}` : null,
+          image_url: image.name
+            ? `${process.env.APP_API_URL}/files/${image.name}`
+            : null,
         }));
 
         return {
@@ -279,7 +285,9 @@ export default class CarsController {
     const carsWithURL = cars.map((car) => {
       const car_images = car.CarImage.map((image) => ({
         ...image,
-        image_url: image.name ? `${process.env.AWS_URL}/${image.name}` : null,
+        image_url: image.name
+          ? `${process.env.APP_API_URL}/files/${image.name}`
+          : null,
       }));
 
       return {
